@@ -23,20 +23,15 @@ namespace Game.Scripts.Player
         [SerializeField]
         private GameObject _model;
 
-        PlayerInput _playerInput;
         PlayerActionAsset _playerActions;
 
         private void Awake()
         {
-            _playerInput = GetComponent<PlayerInput>();
-
-            if(_playerInput == null)
-            {
-                Debug.LogError("Player Input is null");
-            }
 
             _playerActions = new PlayerActionAsset();
         }
+
+      
 
         private void OnEnable()
         {
@@ -50,7 +45,10 @@ namespace Game.Scripts.Player
             Drone.onExitFlightmode += ReturnPlayerControl;
 
             _playerActions.Enable();
-        } 
+
+        }
+
+        
 
         private void Start()
         {
@@ -68,11 +66,12 @@ namespace Game.Scripts.Player
         private void Update()
         {
             if (_canMove == true)
-                CalcutateMovement();
+                CalculateMove();
 
         }
 
-        private void CalcutateMovement()
+
+        public void CalculateMove()
         {
 
             _playerGrounded = _controller.isGrounded;

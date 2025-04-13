@@ -35,6 +35,15 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Press"",
+                    ""type"": ""Button"",
+                    ""id"": ""ccdfc6f1-8e32-4f08-a243-2a1ed98d90ad"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -147,6 +156,28 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f8105054-e612-4e1c-8167-d870c4db6276"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard"",
+                    ""action"": ""Press"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a808553e-c4dd-4272-863a-82aaac86e37f"",
+                    ""path"": ""<Gamepad>/buttonWest"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Gamepad"",
+                    ""action"": ""Press"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -179,6 +210,7 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
         // Player
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
+        m_Player_Press = m_Player.FindAction("Press", throwIfNotFound: true);
     }
 
     ~@PlayerActionAsset()
@@ -246,11 +278,13 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Player;
     private List<IPlayerActions> m_PlayerActionsCallbackInterfaces = new List<IPlayerActions>();
     private readonly InputAction m_Player_Move;
+    private readonly InputAction m_Player_Press;
     public struct PlayerActions
     {
         private @PlayerActionAsset m_Wrapper;
         public PlayerActions(@PlayerActionAsset wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
+        public InputAction @Press => m_Wrapper.m_Player_Press;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -263,6 +297,9 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
             @Move.started += instance.OnMove;
             @Move.performed += instance.OnMove;
             @Move.canceled += instance.OnMove;
+            @Press.started += instance.OnPress;
+            @Press.performed += instance.OnPress;
+            @Press.canceled += instance.OnPress;
         }
 
         private void UnregisterCallbacks(IPlayerActions instance)
@@ -270,6 +307,9 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
             @Move.started -= instance.OnMove;
             @Move.performed -= instance.OnMove;
             @Move.canceled -= instance.OnMove;
+            @Press.started -= instance.OnPress;
+            @Press.performed -= instance.OnPress;
+            @Press.canceled -= instance.OnPress;
         }
 
         public void RemoveCallbacks(IPlayerActions instance)
@@ -308,5 +348,6 @@ public partial class @PlayerActionAsset: IInputActionCollection2, IDisposable
     public interface IPlayerActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnPress(InputAction.CallbackContext context);
     }
 }
